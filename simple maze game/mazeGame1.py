@@ -239,7 +239,7 @@ def setup_maze(level):
             #Cheak if it is an X (x representing a wall)
             if character == "X":
                 pen.goto(screen_x,screen_y)
-                pen.shape("wall.gif")
+                pen.shape("square") #"wall.gif"
                 #note: we can make fake wall using 2 type of wall.
                 pen.stamp()
                 #Add coordinates to wall list (as a point)

@@ -21,12 +21,12 @@ wn.setup(700,700)
 #wn.tracer(0)
 
 #Register shapes
-"""
+
 images =["player_right.gif","player_left.gif","enemy_right.gif","enemy_left.gif",
                              "treasure.gif","wall.gif"]
 for image in images:
     turtle.register_shape(image)
-"""
+
 #create Pen - the tilse
 class Pen(turtle.Turtle):
     def __init__(self):
@@ -40,7 +40,7 @@ class Pen(turtle.Turtle):
 class Player(turtle.Turtle):
        def __init__(self):
            turtle.Turtle.__init__(self)
-           self.shape("square") #player_right.gif
+           self.shape("player_right.gif") #player_right.gif
            self.color("blue")
            self.penup()
            self.speed(0)
@@ -62,13 +62,13 @@ class Player(turtle.Turtle):
        def go_left(self):
            new_x = self.xcor() - TILESIZE
            new_y = self.ycor()
-           #self.shape("player_left.gif")
+           self.shape("player_left.gif")
            if (new_x,new_y) not in walls:
                self.goto(new_x,new_y)
        def go_right(self):
            new_x = self.xcor() + TILESIZE
            new_y = self.ycor()
-           #self.shape("player_right.gif")
+           self.shape("player_right.gif")
            if (new_x,new_y) not in walls:
                self.goto(new_x,new_y)
        #collision detection with treasure or enemy
@@ -97,7 +97,7 @@ class Player(turtle.Turtle):
 class Treasure(turtle.Turtle):
     def __init__(self, x,y):
         turtle.Turtle.__init__(self)
-        self.shape("circle") #treasure.gif
+        self.shape("treasure.gif") #treasure.gif
         self.color("gold")
         self.penup()
         self.speed(0)
@@ -112,7 +112,7 @@ class Treasure(turtle.Turtle):
 class Enemy(turtle.Turtle):
     def __init__(self, x, y):
         turtle.Turtle.__init__(self)
-        self.shape("circle") #enemy_left.gif
+        self.shape("enemy_left.gif") #enemy_left.gif
         self.color("red")
         self.penup()
         self.speed(0)
@@ -130,11 +130,11 @@ class Enemy(turtle.Turtle):
         elif self.direction == "left":
             dx= -TILESIZE
             dy = 0
-            #self.shape("enemy_left.gif")
+            self.shape("enemy_left.gif")
         elif self.direction == "right":
             dx = TILESIZE
             dy = 0
-            #self.shape("enemy_right.gif")
+            self.shape("enemy_right.gif")
         else:
             dx = 0
             dy = 0
@@ -239,7 +239,7 @@ def setup_maze(level):
             #Cheak if it is an X (x representing a wall)
             if character == "X":
                 pen.goto(screen_x,screen_y)
-                pen.shape("square") #"wall.gif"
+                pen.shape("wall.gif") #wall.gif
                 #note: we can make fake wall using 2 type of wall.
                 pen.stamp()
                 #Add coordinates to wall list (as a point)

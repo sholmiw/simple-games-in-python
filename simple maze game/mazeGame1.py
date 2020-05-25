@@ -36,6 +36,38 @@ class Pen(turtle.Turtle):
         self.penup()
         self.speed(0)
 
+class Fakewall(turtle.Turtle):
+    def __init__(self, x,y):
+        turtle.Turtle.__init__(self)
+        self.shape("wall.gif")
+        self.color("green")
+        self.penup()
+        self.speed(0)
+        self.goto(x,y)
+
+    def go_up(self):
+        new_x = self.xcor()
+        new_y = self.ycor() + TILESIZE
+        #Cheak for collision
+        if (new_x,new_y) not in walls:
+            self.goto(new_x,new_y)
+    def go_down(self):
+        new_x = self.xcor()
+        new_y = self.ycor() - TILESIZE 
+        if (new_x,new_y) not in walls:
+            self.goto(new_x,new_y)
+    def go_left(self):
+        new_x = self.xcor() - TILESIZE
+        new_y = self.ycor()
+        if (new_x,new_y) not in walls:
+            self.goto(new_x,new_y)
+    def go_right(self):
+        new_x = self.xcor() + TILESIZE
+        new_y = self.ycor()            
+        if (new_x,new_y) not in walls:
+            self.goto(new_x,new_y)
+
+
 #Create Player class
 class Player(turtle.Turtle):
        def __init__(self):
@@ -153,7 +185,7 @@ class Enemy(turtle.Turtle):
         #Calculate the spot to move to 
         move_to_x =self.xcor() + dx
         move_to_y =self.ycor() + dy
-        #cheak if the space has a wall
+        #cheak if the space has a wall, enemy can move on fake walls
         if (move_to_x, move_to_y) not in walls:
             self.goto(move_to_x, move_to_y)
         else:
@@ -175,17 +207,7 @@ class Enemy(turtle.Turtle):
     def destroy(self):
         self.goto(2000,2000)
         self.hideturtle()
-"""
-#Create enamy
-class Enamy(turtle.Turtle):
-       def __init__(self):
-           turtle.Turtle.__init__(self)
-           self.shape("square")
-           self.color("red")
-           self.penup()
-           self.speed(0) 
-
-"""           
+    
         
 #create level list
 levels = [""]
@@ -195,25 +217,17 @@ level_1 = [
 "XXXXXXXXXXXXXXXXXXXXXXXXX",
 "XXXXXXXXXXXXXXXXXXXXXXXXX",
 "XP                      X",
-"XXXXXXXXXXXXXXXXXXXXX   X",
-"XXXXXXXXXXXXXXXXXXX     X",
-"XXXXXXXXXXXXXXXXX       X",
+"XXXX     XXXXXXXXXXXXXXBX",
+"XX     XXXXXXXXXXXX     X",
+"XXXX  B    XXXXXX       X",
 "XXXXXXXXXXXXXXXXX       X",
 "XXXXXXXXXXXXXX          X",
-"XXX E                    X",
+"XXX E                   X",
 "XXX                 XXXXX",
-"XXX      XXXXXTXXXXXXXXX",
-"XXXXXXXX XXXXXE      XXXXX",
-"XXXX     XXXXX      XXXXX",
-"XXXX     XXXXX      XXXXX",
-"XXXX     XXXXX XXXX XXXXX",
-"XXXX XXX XXXXX      XXXXX",
-"XXXX     XXXXX      XXXXX",
-"XXXX     XXXXX      XXXXX",
-"XXXX     XXXXX      XXXXX",
-"XXXX     XXXXX      XXXXX",
-"XXXX     XXXXX      XXXXX",
-"XXXX     XXXXX      XXXXX",
+"XXX       XXXXXTXXXXXXXXX",
+"XXXXXXXX XXXXXE     XXXXX",
+"XXXXXXXXXXXXXXXXXXXXXXXXX",
+
 ]
 
 #add a treasure list
@@ -240,10 +254,16 @@ def setup_maze(level):
             if character == "X":
                 pen.goto(screen_x,screen_y)
                 pen.shape("wall.gif") #wall.gif
-                #note: we can make fake wall using 2 type of wall.
+                
                 pen.stamp()
                 #Add coordinates to wall list (as a point)
                 walls.append((screen_x,screen_y))
+                #obstacles.append((screen_x,screen_y))
+            #note: we can make fake wall using 2 type of wall.
+            if character == "B":
+                fake = Fakewall(screen_x,screen_y) # can be in next line
+                fakewalls.append(fake)
+                #obstacles.append((screen_x,screen_y)) #can be remove, Fakewall and  need fixing 
             #Cheak if it is an P (for Player position)
             if character == "P":
                 player.goto(screen_x,screen_y)
@@ -254,12 +274,16 @@ def setup_maze(level):
             #Cheak if it is an E (for enemy position)
             if character == "E":
                 enemeis.append(Enemy(screen_x,screen_y))
+
+            
 #Create class instance
 pen = Pen()
 player = Player()
+fakewalls =[]
 
 #Create wall coordinate list
 walls = []
+#obstacles = []
 #Set up the level
 setup_maze(levels[1])
 #Keyboard Binding
@@ -295,6 +319,9 @@ while True:
         if player.is_collision(enemy):
             print("player dies!")
             exit()
-            
+    #need fixing to work for all sides
+    for fwall in fakewalls:
+        if player.is_collision(fwall): 
+           fwall.go_down()         
     wn.update()
     #pass

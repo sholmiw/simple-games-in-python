@@ -2,8 +2,7 @@ import turtle
 import math
 import random
 import time
-# we have a bug somewhere fron part 11-12
-# and we in part 13 https://www.youtube.com/watch?v=DeH3j7yxpF0 in min: 4
+# we are in part 17, think to change the missile system
 delay = 0.01
 slowmode = False
 
